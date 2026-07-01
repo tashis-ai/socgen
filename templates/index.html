@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор постов для соцсетей</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3">
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <h1 class="header__title">Генератор постов</h1>
+            <p class="header__subtitle">Создайте пост для соцсетей на основе любой веб-страницы</p>
+        </header>
+
+        <main class="main">
+            <form id="generate-form" class="form" novalidate action="#" method="post">
+                <div class="form__group">
+                    <label for="url" class="form__label">Введите адрес страницы (URL)</label>
+                    <input
+                        type="url"
+                        id="url"
+                        name="url"
+                        class="form__input"
+                        placeholder="https://example.com/article"
+                        autocomplete="url"
+                    >
+                </div>
+
+                <div class="form__group">
+                    <span class="form__label" id="style-label">Стиль поста</span>
+                    <div id="style-pills" class="style-pills" role="radiogroup" aria-labelledby="style-label">
+                        {% for style in styles %}
+                        <button
+                            type="button"
+                            class="style-pill"
+                            data-style="{{ style }}"
+                            role="radio"
+                            aria-checked="false"
+                        >{{ style | capitalize }}</button>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" id="style" name="style" value="">
+                </div>
+
+                <div class="form__group">
+                    <div class="form__label-row">
+                        <label for="temperature" class="form__label">Креативность</label>
+                        <span id="temperature-value" class="form__range-value" aria-live="polite">0.8</span>
+                    </div>
+                    <input
+                        type="range"
+                        id="temperature"
+                        class="form__range"
+                        min="0"
+                        max="2"
+                        step="0.1"
+                        value="0.8"
+                    >
+                </div>
+
+                <div class="form__actions">
+                    <button type="submit" id="generate-btn" class="btn btn--primary">
+                        <span id="btn-text">Сгенерировать пост</span>
+                        <span id="btn-spinner" class="spinner" hidden aria-hidden="true"></span>
+                    </button>
+                </div>
+            </form>
+
+            <section id="result" class="result" hidden>
+                <h2 class="result__title">Готовый пост</h2>
+                <div id="result-text" class="result__text"></div>
+                <div class="result__actions">
+                    <button type="button" id="copy-btn" class="btn btn--secondary">Скопировать в буфер</button>
+                    <button type="button" id="download-btn" class="btn btn--secondary">Сохранить в TXT</button>
+                </div>
+                <p id="download-status" class="result__status" role="status" aria-live="polite"></p>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Генератор постов для соцсетей</p>
+        </footer>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay" aria-hidden="true">        <div class="modal" role="alertdialog" aria-labelledby="modal-title" aria-describedby="modal-message" aria-modal="true">
+            <div class="modal__icon" aria-hidden="true">✕</div>
+            <h2 id="modal-title" class="modal__title">Ошибка</h2>
+            <p id="modal-message" class="modal__message"></p>
+            <button type="button" id="modal-close" class="btn btn--primary modal__close">Закрыть</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}?v=4"></script>
+</body>
+</html>
